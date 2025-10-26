@@ -14,33 +14,41 @@ public class CursoController {
     public static void Criar() {
         Curso curso = new Curso();
         CursoView.Criar(curso);
+        validaSeExisteCodigo(curso.getCodigoCurso());
         if (curso != null) {
             CursoDAO.Add(curso);
         }
     }
 
+    public static void validaSeExisteCodigo(String codigo) {
+        boolean existeCodigo = CursoDAO.existeEsseCodigo(codigo);
+        if (!existeCodigo) {
+            System.out.println("Essa código já está cadastrada em um aluno ja existente!");
+            SubMenuController.show("Aluno");
+        }
+    }
+
     public static void Consultar() {
-        int codigo = CursoView.GetCurso();
+        String codigo = CursoView.GetCurso();
         Curso curso = CursoDAO.Get(codigo);
         CursoView.Consultar(curso);
     }
 
+    public static void ListarCursoAll(){
+        CursoView.ConsultarAll(CursoDAO.GetAll());
+    }
+
     public static void Atualizar() {
-        int codigo = CursoView.GetCurso();
+        String codigo = CursoView.GetCurso();
         Curso curso = CursoDAO.Get(codigo);
         CursoView.Atualizar(curso);
         CursoDAO.Atualizar(codigo);
     }
 
     public static void Deletar() {
-        int codigo = CursoView.GetCurso();
+        String codigo = CursoView.GetCurso();
         CursoDAO.Deletar(codigo);
+        SubMenuController.show("Curso");
     }
-
-    public static void ListarCursoAll(){
-        List<Curso> cursos = CursoDAO.GetAll();
-        CursoView.ConsultarAll(cursos);
-    }
-
 
 }

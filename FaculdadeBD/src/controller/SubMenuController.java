@@ -9,42 +9,46 @@ public class SubMenuController {
 
     public static void show(String value) {
         Scanner scan = new Scanner(System.in);
-        int opcao = -1;
-
+        String opcao;
+        int opcaoValidada;
         do {
             SubMenuView.print(value);
-            opcao = scan.nextInt();
+            opcao = scan.nextLine();
+            opcaoValidada = MenuController.valaidaSeUsuarioEscolheuAlgumaOpcao(opcao);
             if (value.equals("Aluno")) {
-                switch (opcao) {
+                switch (opcaoValidada) {
                     case 1 -> AlunoController.Criar();
                     case 2 -> AlunoController.Consultar();
                     case 3 -> AlunoController.Listar();
                     case 4 -> AlunoController.Atualizar();
                     case 5 -> AlunoController.Deletar();
+                    case 6 -> MenuController.show();
                     default -> System.out.println("\nInsira um valor válido!\n");
                 }
             }
             if (value.equals("Curso")) {
-                switch (opcao) {
+                switch (opcaoValidada) {
                         case 1 -> CursoController.Criar();
                         case 2 -> CursoController.Consultar();
                         case 3 -> CursoController.ListarCursoAll();
                         case 4 -> CursoController.Atualizar();
                         case 5 -> CursoController.Deletar();
+                        case 6 -> MenuController.show();
                         default -> System.out.println("\nInsira um valor válido!\n");
                 }
             }
             if (value.equals("Disciplina")) {
-                switch (opcao) {
+                switch (opcaoValidada) {
 //                    case 1 -> DisciplinaController.Criar();
 //                    case 2 -> DisciplinaController.Consultar();
 //                    case 3 -> DisciplinaController.Atualizar();
 //                    case 4 -> DisciplinaController.Deletar();
+//                    case 6 -> MenuController.show();
                     default -> System.out.println("\nInsira um valor válido!\n");
                 }
             }
 
-        } while (opcao < 5);
+        } while (opcaoValidada < 5);
     }
 
 }
