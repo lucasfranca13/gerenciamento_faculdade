@@ -3,14 +3,24 @@ package controller;
 import dao.AlunoDAO;
 import model.Aluno;
 import view.AlunoView;
+import controller.MenuController;
 
 public class AlunoController {
 
     public static void Criar() {
         Aluno aluno = new Aluno();
         AlunoView.Criar(aluno);
+        validaSeExisteMatricula(aluno.getMatricula());
         if (aluno != null) {
             AlunoDAO.Add(aluno);
+        }
+    }
+
+    public static void validaSeExisteMatricula(String matricula) {
+        boolean existeMatricula = AlunoDAO.existeEssaMatricula(matricula);
+        if (!existeMatricula) {
+            System.out.println("Essa matricula já está cadastrada em um aluno ja existente!");
+            SubMenuController.show("Aluno");
         }
     }
 
@@ -21,7 +31,6 @@ public class AlunoController {
     }
 
     public static void Listar() {
-        Aluno listagemDeAlunos = new Aluno();
         AlunoView.Listar(AlunoDAO.GetAll());
     }
 
@@ -29,11 +38,13 @@ public class AlunoController {
         String matricula = AlunoView.GetMatricula();
         Aluno aluno = AlunoDAO.Get(matricula);
         AlunoView.Atualizar(aluno);
+        AlunoDAO.Atualiza(aluno);
     }
 
     public static void Deletar() {
         String matricula = AlunoView.GetMatricula();
         AlunoDAO.Delete(matricula);
+        SubMenuController.show("Aluno");
     }
 
 }
