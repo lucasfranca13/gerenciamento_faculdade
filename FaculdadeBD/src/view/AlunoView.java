@@ -1,7 +1,10 @@
 package view;
 
+import controller.MenuController;
+import controller.SubMenuController;
 import model.Aluno;
 
+import javax.swing.*;
 import java.util.List;
 import java.util.Scanner;
 
@@ -14,24 +17,55 @@ public class AlunoView {
         aluno.setNome(scan.next());
 
         System.out.print("Idade: ");
-        aluno.setIdade(scan.nextInt());
+        int dataValidada = validaValorIdade(scan.next());
+        aluno.setIdade(dataValidada);
 
         System.out.print("Matricula: ");
         aluno.setMatricula(scan.next());
 
     }
-
+    public static int validaValorIdade(String idade) {
+        try  {
+            Integer.parseInt(idade);
+        } catch (NumberFormatException e) {
+            System.out.println("A idade não pode conter letras ou caracteres especiais");
+            SubMenuController.show("Aluno");
+        }
+        return Integer.parseInt(idade);
+    };
     public static void Atualizar(Aluno aluno) {
         Scanner scan = new Scanner(System.in);
 
         System.out.print("("+ aluno.getNome() + ") - Nome: ");
-        String nome = scan.next(); scan.nextLine();
-        if (!nome.isEmpty()) { aluno.setNome(nome); }
+        String nome = scan.next();
+        validaNomeAluno(nome, aluno);
 
         System.out.print("("+ aluno.getIdade() + ") - Idade: ");
-        String idade = scan.nextLine();
-        if (!idade.isEmpty()) { aluno.setIdade(Integer.parseInt(idade)); }
+        String idade = scan.next();
+        validaValorIdade(idade);
+        validaIdadeAluno(idade, aluno);
 
+    }
+
+    public static void validaNomeAluno(String nome, Aluno aluno){
+        if (!nome.isEmpty()) {
+            aluno.setNome(nome);
+        }
+        else {
+            System.out.print("Digite algum valor para nome!");
+            SubMenuController.show("Aluno");
+        }
+    }
+
+    public static void validaIdadeAluno(String idade, Aluno aluno){
+        if (!idade.isEmpty()) {
+            int idadeValidada = validaValorIdade(idade);
+            aluno.setIdade(idadeValidada);
+        }
+        else {
+            System.out.print("Digite algum valor para idade!");
+            SubMenuController.show("Aluno");
+        }
     }
 
     public static void Listar(List<Aluno> alunos) {
