@@ -20,11 +20,12 @@ public class AlunoView {
         aluno.setMatricula(scan.next());
 
     }
+
     public static void Atualizar(Aluno aluno) {
         Scanner scan = new Scanner(System.in);
 
         System.out.print("("+ aluno.getNome() + ") - Nome: ");
-        String nome = scan.next();
+        String nome = scan.next(); scan.nextLine();
         if (!nome.isEmpty()) { aluno.setNome(nome); }
 
         System.out.print("("+ aluno.getIdade() + ") - Idade: ");
