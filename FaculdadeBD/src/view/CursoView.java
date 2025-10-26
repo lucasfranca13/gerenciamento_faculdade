@@ -37,7 +37,7 @@ public class CursoView {
         validaTurnoCurso(turno, curso);
     }
 
-    // listar cursos (a fazer)
+    // listar cursos
 
     public static void ConsultarAll(List<Curso> curso) {
 

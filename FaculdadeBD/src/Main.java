@@ -1,6 +1,7 @@
 import controller.MenuController;
 import dao.AlunoDAO;
 import dao.CursoDAO;
+import dao.DisciplinaDAO;
 import database.DatabaseConnection;
 import model.Curso;
 
@@ -12,6 +13,7 @@ public class Main {
         DatabaseConnection.getConnection();
         AlunoDAO.Criar();
         CursoDAO.Criar();
+        DisciplinaDAO.Criar();
         MenuController.show();
         DatabaseConnection.closeConnection();
 
