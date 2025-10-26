@@ -1,5 +1,6 @@
 package dao;
 
+import controller.SubMenuController;
 import database.DatabaseConnection;
 import model.Aluno;
 
@@ -23,11 +24,9 @@ public class CursoDAO {
     // CREATE CURSO
     public static void Add(Curso curso) {
         String sql = "INSERT INTO cursos (codigo, nome, turno) VALUES (?, ?, ?)";
-
-
             try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
 
-                stmt.setInt(1, curso.getCodigoCurso());
+                stmt.setString(1, curso.getCodigoCurso());
                 stmt.setString(2, curso.getNomeCurso());
                 stmt.setString(3, curso.getTurno());
 
@@ -40,24 +39,58 @@ public class CursoDAO {
             }
     }
 
-    //READ CURSO
-
-    public static Curso Get(int codigo) {
+    public static boolean existeEsseCodigo(String codigo) {
         String sql = "SELECT * FROM cursos WHERE codigo = ?";
         Optional<Curso> curso = Optional.empty();
 
         try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
 
-            stmt.setInt(1, codigo);
+            stmt.setString(1, codigo);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    // Cria o objeto Aluno a partir dos dados retornados
+                    curso = Optional.of(new Curso(
+                            rs.getString("Codigo"),
+                            rs.getString("Nome"),
+                            rs.getString("Turno")
+                    ));
+                }
+                if(curso.isEmpty()){
+                    return true;
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao consultar aluno: " + e.getMessage());
+            throw new RuntimeException("Erro ao consultar aluno no banco de dados", e);
+        }
+
+        return false;
+    };
+
+    //READ CURSO
+
+    public static Curso Get(String codigo) {
+        String sql = "SELECT * FROM cursos WHERE codigo = ?";
+        Optional<Curso> curso = Optional.empty();
+
+        try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
+
+            stmt.setString(1, codigo);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     // Cria o objeto Curso a partir dos dados retornados
                     curso = Optional.of(new Curso(
-                            rs.getInt("Codigo"),
+                            rs.getString("Codigo"),
                             rs.getString("Nome"),
                             rs.getString("Turno")
                     ));
+                }
+                if(curso.isEmpty()){
+                    System.out.println("Código: " + codigo + " não está vinculada a nenhum curso");
+                    SubMenuController.show("Curso");
                 }
             }
 
@@ -80,11 +113,15 @@ public class CursoDAO {
 
             while (rs.next()) {
                 Curso curso = new Curso(
-                        rs.getInt("Codigo"),
+                        rs.getString("Codigo"),
                         rs.getString("Nome"),
                         rs.getString("Turno")
                 );
                 listaCursos.add(curso);
+            }
+            if(listaCursos.isEmpty()){
+                System.out.println("Não foi encontrato nenhum aluno em nosso banco de dados");
+                SubMenuController.show("Curso");
             }
 
         } catch (SQLException e) {
@@ -96,7 +133,7 @@ public class CursoDAO {
     }
 
     //UPDATE CURSO (SET)
-    public static void Atualizar(int codigo) {
+    public static void Atualizar(String codigo) {
         Curso curso = Get(codigo);
 
         String sql = "UPDATE cursos SET nome = ?, turno = ? WHERE codigo = ?";
@@ -105,10 +142,15 @@ public class CursoDAO {
 
             stmt.setString(1, curso.getNomeCurso());
             stmt.setString(2, curso.getTurno());
-            stmt.setInt(3, curso.getCodigoCurso());
+            stmt.setString(3, curso.getCodigoCurso());
 
-            stmt.executeUpdate();
-            System.out.println("\nCurso Atualizado com sucesso!\n");
+            int linhasAfetadas = stmt.executeUpdate();
+
+            if (linhasAfetadas > 0) {
+                System.out.println("Aluno atualizado com sucesso!");
+            } else {
+                System.out.println("Nenhum aluno encontrado com a matrícula informada.");
+            }
 
         } catch (SQLException e) {
             System.err.println("Erro ao atualizar curso: " + e.getMessage());
@@ -118,12 +160,12 @@ public class CursoDAO {
 
     // DELETE CURSO
 
-    public static void Deletar(int codigo) {
+    public static void Deletar(String codigo) {
 
         String deleteSql = "DELETE FROM cursos WHERE codigo = ?";
 
         try (PreparedStatement deleteStmt = DatabaseConnection.getConnection().prepareStatement(deleteSql)) {
-            deleteStmt.setInt(1, codigo);
+            deleteStmt.setString(1, codigo);
             deleteStmt.executeUpdate();
             System.out.println("Curso removido do banco de dados com sucesso!");
         } catch (SQLException e) {
@@ -135,7 +177,7 @@ public class CursoDAO {
     public static void Criar() {
         String sqlCreateTable = """
             CREATE TABLE IF NOT EXISTS cursos (
-                codigo INT PRIMARY KEY,
+                codigo VARCHAR(10) PRIMARY KEY,
                 nome VARCHAR(100) NOT NULL,
                 turno VARCHAR(100) NOT NULL
             );

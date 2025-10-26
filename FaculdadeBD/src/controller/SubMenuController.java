@@ -9,13 +9,14 @@ public class SubMenuController {
 
     public static void show(String value) {
         Scanner scan = new Scanner(System.in);
-        int opcao = -1;
-
+        String opcao;
+        int opcaoValidada;
         do {
             SubMenuView.print(value);
-            opcao = scan.nextInt();
+            opcao = scan.nextLine();
+            opcaoValidada = MenuController.valaidaSeUsuarioEscolheuAlgumaOpcao(opcao);
             if (value.equals("Aluno")) {
-                switch (opcao) {
+                switch (opcaoValidada) {
                     case 1 -> AlunoController.Criar();
                     case 2 -> AlunoController.Consultar();
                     case 3 -> AlunoController.Listar();
@@ -26,7 +27,7 @@ public class SubMenuController {
                 }
             }
             if (value.equals("Curso")) {
-                switch (opcao) {
+                switch (opcaoValidada) {
                         case 1 -> CursoController.Criar();
                         case 2 -> CursoController.Consultar();
                         case 3 -> CursoController.ListarCursoAll();
@@ -48,7 +49,7 @@ public class SubMenuController {
                 }
             }
 
-        } while (opcao < 5);
+        } while (opcaoValidada < 5);
     }
 
 }

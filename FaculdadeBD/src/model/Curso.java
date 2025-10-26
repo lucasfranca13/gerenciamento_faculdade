@@ -3,7 +3,7 @@ package model;
 import java.util.List;
 
 public class Curso {
-    private int codigoCurso;
+    private String codigoCurso;
     private String nomeCurso;
     private String turno;
     private List<Aluno> listaAlunos;
@@ -11,24 +11,24 @@ public class Curso {
     public Curso() {
     }
 
-    public Curso(int codigoCurso, String nomeCurso, String turno) {
+    public Curso(String codigoCurso, String nomeCurso, String turno) {
         this.codigoCurso = codigoCurso;
         this.nomeCurso = nomeCurso;
         this.turno = turno;
     }
 
-    public Curso(int codigoCurso, String nomeCurso, String turno, List<Aluno> listaAlunos) {
+    public Curso(String codigoCurso, String nomeCurso, String turno, List<Aluno> listaAlunos) {
         this.codigoCurso = codigoCurso;
         this.nomeCurso = nomeCurso;
         this.turno = turno;
         this.listaAlunos = listaAlunos;
     }
 
-    public int getCodigoCurso() {
+    public String getCodigoCurso() {
         return codigoCurso;
     }
 
-    public void setCodigoCurso(int codigoCurso) {
+    public void setCodigoCurso(String codigoCurso) {
         this.codigoCurso = codigoCurso;
     }
 

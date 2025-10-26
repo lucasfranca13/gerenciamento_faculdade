@@ -1,5 +1,6 @@
 package view;
 
+import controller.SubMenuController;
 import model.Aluno;
 import model.Curso;
 
@@ -12,14 +13,16 @@ public class CursoView {
         Scanner scan = new Scanner(System.in);
 
         System.out.print("Codigo: ");
-        curso.setCodigoCurso(scan.nextInt()); scan.nextLine();
+        String codigoCurso = scan.nextLine();
+        validaCodigoCurso(codigoCurso, curso);
 
         System.out.print("Nome: ");
-        curso.setNomeCurso(scan.nextLine());
+        String nome = scan.nextLine();
+        validaNomeCurso(nome, curso);
 
         System.out.print("Turno: ");
-        curso.setTurno(scan.nextLine());
-
+        String turno = scan.nextLine();
+        validaTurnoCurso(turno, curso);
     }
 
     public static void Atualizar(Curso curso) {
@@ -27,12 +30,11 @@ public class CursoView {
 
         System.out.print("("+ curso.getNomeCurso() + ") - Nome: ");
         String nome = scan.nextLine();
-        if (!nome.isEmpty()) { curso.setNomeCurso(nome); }
+        validaNomeCurso(nome, curso);
 
         System.out.print("("+ curso.getTurno() + ") - Turno: ");
         String turno = scan.nextLine();
-        if (!turno.isEmpty()) { curso.setTurno(turno); }
-
+        validaTurnoCurso(turno, curso);
     }
 
     // listar cursos
@@ -47,7 +49,6 @@ public class CursoView {
         }
     }
 
-
     public static void Consultar(Curso curso) {
         System.out.println("Código Curso: " + curso.getCodigoCurso());
         System.out.println("Nome: " + curso.getNomeCurso());
@@ -55,12 +56,45 @@ public class CursoView {
         System.out.println();
     }
 
-
-    public static Integer GetCurso() {
+    public static String GetCurso() {
         Scanner scan = new Scanner(System.in);
         System.out.print("Informe o código: ");
-        int codigo = scan.nextInt(); scan.nextLine();
+        String codigo = scan.nextLine();
+        if(codigo.isEmpty()){
+            System.out.println("Digite algum valor para código!");
+            SubMenuController.show("Curso");
+        }
         return codigo;
+    }
+
+    public static void validaNomeCurso(String nome, Curso curso){
+        if (!nome.isEmpty()) {
+            curso.setNomeCurso(nome);
+        }
+        else {
+            System.out.println("Digite algum valor para nome!");
+            SubMenuController.show("Curso");
+        }
+    }
+
+    public static void validaCodigoCurso(String codigo, Curso curso){
+        if (!codigo.isEmpty()) {
+            curso.setCodigoCurso(codigo);
+        }
+        else {
+            System.out.println("Digite algum valor para codigo!");
+            SubMenuController.show("Curso");
+        }
+    }
+
+    public static void validaTurnoCurso(String turno, Curso curso){
+        if (!turno.isEmpty()) {
+            curso.setTurno(turno);
+        }
+        else {
+            System.out.println("Digite algum valor para turno!");
+            SubMenuController.show("Curso");
+        }
     }
 
 }
