@@ -21,6 +21,7 @@ public class SubMenuController {
                     case 3 -> AlunoController.Listar();
                     case 4 -> AlunoController.Atualizar();
                     case 5 -> AlunoController.Deletar();
+                    case 6 -> MenuController.show();
                     default -> System.out.println("\nInsira um valor válido!\n");
                 }
             }
@@ -31,15 +32,18 @@ public class SubMenuController {
                         case 3 -> CursoController.ListarCursoAll();
                         case 4 -> CursoController.Atualizar();
                         case 5 -> CursoController.Deletar();
+                        case 6 -> MenuController.show();
                         default -> System.out.println("\nInsira um valor válido!\n");
                 }
             }
             if (value.equals("Disciplina")) {
                 switch (opcao) {
-//                    case 1 -> DisciplinaController.Criar();
-//                    case 2 -> DisciplinaController.Consultar();
-//                    case 3 -> DisciplinaController.Atualizar();
-//                    case 4 -> DisciplinaController.Deletar();
+                    case 1 -> DisciplinaController.Criar();
+                    case 2 -> DisciplinaController.Consultar();
+                    case 3 -> DisciplinaController.ListarDisciplinasAll();
+                    case 4 -> DisciplinaController.Atualizar();
+                    case 5 -> DisciplinaController.Deletar();
+                    case 6 -> MenuController.show();
                     default -> System.out.println("\nInsira um valor válido!\n");
                 }
             }

@@ -1,17 +1,17 @@
 package model;
 
-public class Disciplinas {
+public class Disciplina {
 
     private String nome;
-    private int carga;
     private String codigoDisciplina;
+    private int carga;
 
-    public Disciplinas(String nome, int carga, String codigoDisciplina) {
+    public Disciplina(String codigoDisciplina, String nome, int carga) {
+        this.codigoDisciplina = codigoDisciplina;
         this.nome = nome;
         this.carga = carga;
-        this.codigoDisciplina = codigoDisciplina;
     }
-    public Disciplinas() {
+    public Disciplina() {
 
     }
 

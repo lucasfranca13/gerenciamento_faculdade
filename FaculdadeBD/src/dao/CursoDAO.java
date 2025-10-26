@@ -69,7 +69,7 @@ public class CursoDAO {
         return curso.get();
     }
 
-    // selecionar todos os cursos (a fazer)
+    // lista todos os cursos
 
     public static List<Curso> GetAll(){
         List<Curso> listaCursos = new ArrayList<>();

@@ -35,7 +35,7 @@ public class CursoView {
 
     }
 
-    // listar cursos (a fazer)
+    // listar cursos
 
     public static void ConsultarAll(List<Curso> curso) {
 
