@@ -71,24 +71,44 @@ public class CursoDAO {
 
     // selecionar todos os cursos (a fazer)
 
+    public static List<Curso> GetAll(){
+        List<Curso> listaCursos = new ArrayList<>();
+        String sql = "SELECT Codigo, Nome, Turno FROM cursos ORDER BY Nome";
+
+        try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Curso curso = new Curso(
+                        rs.getInt("Codigo"),
+                        rs.getString("Nome"),
+                        rs.getString("Turno")
+                );
+                listaCursos.add(curso);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao consultar cursos: " + e.getMessage());
+            throw new RuntimeException("Erro ao consultar cursos no banco de dados", e);
+        }
+
+        return listaCursos;
+    }
 
     //UPDATE CURSO (SET)
-    public static void atualizarCurso(Curso curso) {
-        String sql = "UPDATE curso SET nome = ?, turno = ? WHERE codigo = ?";
+    public static void Atualizar(int codigo) {
+        Curso curso = Get(codigo);
+
+        String sql = "UPDATE cursos SET nome = ?, turno = ? WHERE codigo = ?";
 
         try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
 
             stmt.setString(1, curso.getNomeCurso());
-            stmt.setInt(2, curso.getCodigoCurso());
-            stmt.setString(3, curso.getTurno());
+            stmt.setString(2, curso.getTurno());
+            stmt.setInt(3, curso.getCodigoCurso());
 
-            int linhasAfetadas = stmt.executeUpdate();
-
-            if (linhasAfetadas > 0) {
-                System.out.println("Curso atualizado com sucesso!");
-            } else {
-                System.out.println("Nenhum curso encontrado com o código informada.");
-            }
+            stmt.executeUpdate();
+            System.out.println("\nCurso Atualizado com sucesso!\n");
 
         } catch (SQLException e) {
             System.err.println("Erro ao atualizar curso: " + e.getMessage());
@@ -98,8 +118,7 @@ public class CursoDAO {
 
     // DELETE CURSO
 
-    public static void Delete(int codigo) {
-        Curso curso = Get(codigo);
+    public static void Deletar(int codigo) {
 
         String deleteSql = "DELETE FROM cursos WHERE codigo = ?";
 

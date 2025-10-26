@@ -3,6 +3,7 @@ package view;
 import model.Aluno;
 import model.Curso;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class CursoView {
@@ -25,7 +26,7 @@ public class CursoView {
         Scanner scan = new Scanner(System.in);
 
         System.out.print("("+ curso.getNomeCurso() + ") - Nome: ");
-        String nome = scan.next();
+        String nome = scan.nextLine();
         if (!nome.isEmpty()) { curso.setNomeCurso(nome); }
 
         System.out.print("("+ curso.getTurno() + ") - Turno: ");
@@ -35,6 +36,17 @@ public class CursoView {
     }
 
     // listar cursos (a fazer)
+
+    public static void ConsultarAll(List<Curso> curso) {
+
+        for (Curso item : curso){
+            System.out.println("Código Curso: " + item.getCodigoCurso());
+            System.out.println("Nome: " + item.getNomeCurso());
+            System.out.println("Turno: " + item.getTurno());
+            System.out.println();
+        }
+    }
+
 
     public static void Consultar(Curso curso) {
         System.out.println("Código Curso: " + curso.getCodigoCurso());
@@ -46,8 +58,8 @@ public class CursoView {
 
     public static Integer GetCurso() {
         Scanner scan = new Scanner(System.in);
-        System.out.println("Informe o código: ");
-        Integer codigo = scan.nextInt();
+        System.out.print("Informe o código: ");
+        int codigo = scan.nextInt(); scan.nextLine();
         return codigo;
     }
 
