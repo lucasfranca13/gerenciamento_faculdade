@@ -69,10 +69,6 @@ public class AlunoDAO {
         return false;
     };
 
-//    public static Aluno Get(String matricula) {
-//        return listAlunos.stream().filter(a -> a.getMatricula().equals(matricula)).findFirst().get();
-//    }
-
     public static Aluno Get(String matricula) {
         String sql = "SELECT * FROM alunos WHERE matricula = ?";
         Optional<Aluno> aluno = Optional.empty();
@@ -103,14 +99,6 @@ public class AlunoDAO {
 
         return aluno.get();
     }
-
-    public static List<Aluno> GetAllByAge(int age) {
-        return listAlunos.stream().filter(a -> a.getIdade() == age).toList();
-    }
-
-//    public static List<Aluno> GetAllByNameContains(String name) {
-//        return listAlunos.stream().filter(a -> a.getNome().contains(name)).toList();
-//    }
 
     public static List<Aluno> GetAll() {
         String sql = "SELECT * FROM alunos ORDER BY nome";
