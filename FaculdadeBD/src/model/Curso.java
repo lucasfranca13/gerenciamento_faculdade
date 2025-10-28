@@ -7,11 +7,12 @@ public class Curso {
     private String nomeCurso;
     private String turno;
     private List<Aluno> listaAlunos;
+    private String idDisciplina;
 
     public Curso() {
     }
 
-    public Curso(String codigoCurso, String nomeCurso, String turno) {
+    public Curso(String codigoCurso, String nomeCurso, String turno, String idDisciplina) {
         this.codigoCurso = codigoCurso;
         this.nomeCurso = nomeCurso;
         this.turno = turno;
@@ -46,6 +47,14 @@ public class Curso {
 
     public void setTurno(String turno) {
         this.turno = turno;
+    }
+
+    public String getIdDisciplina() {
+        return idDisciplina;
+    }
+
+    public void setIdDisciplina(String idDisciplina) {
+        this.idDisciplina = idDisciplina;
     }
 
     public List<Aluno> getListaAlunos() {

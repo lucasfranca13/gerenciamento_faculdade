@@ -3,6 +3,8 @@ package view;
 import controller.MenuController;
 import controller.SubMenuController;
 import model.Aluno;
+import dao.CursoDAO;
+import model.Curso;
 
 import javax.swing.*;
 import java.util.List;
@@ -12,6 +14,8 @@ public class AlunoView {
 
     public static void Criar(Aluno aluno) {
         Scanner scan = new Scanner(System.in);
+        validaSeExisteCurso();
+        mostraCursoExistente();
 
         System.out.print("Nome: ");
         String nome = scan.nextLine();
@@ -25,10 +29,24 @@ public class AlunoView {
         String matricula = scan.nextLine();
         validaMatriculaAluno(matricula, aluno);
 
+        System.out.print("Digite o códico do curso: ");
+        String curso = scan.nextLine();
+        validaCodigoDoCurso(curso, aluno);
+        boolean existeEsseCurso = CursoDAO.existeEsseCodigo(curso);
+        if(!existeEsseCurso){
+            validaCursoAluno(curso, aluno);
+        }
+        else {
+            System.out.println("O código desse curso não existe!");
+            SubMenuController.show("Aluno");
+        }
+
     }
 
     public static void Atualizar(Aluno aluno) {
         Scanner scan = new Scanner(System.in);
+
+        mostraCursoExistente();
 
         System.out.print("("+ aluno.getNome() + ") - Nome: ");
         String nome = scan.nextLine();
@@ -37,6 +55,10 @@ public class AlunoView {
         System.out.print("("+ aluno.getIdade() + ") - Idade: ");
         String idade = scan.nextLine();
         validaIdadeAluno(idade, aluno);
+
+        System.out.print("("+ aluno.getIdCurso() + ") - Código do curso: ");
+        String curso = scan.nextLine();
+        validaCodigoDoCurso(curso, aluno);
 
     }
 
@@ -50,6 +72,7 @@ public class AlunoView {
         System.out.println("Matricula: " + aluno.getMatricula());
         System.out.println("Nome: " + aluno.getNome());
         System.out.println("Idade: " + aluno.getIdade());
+        System.out.println("Código do curso: " + aluno.getIdCurso());
         System.out.println();
     }
 
@@ -101,6 +124,51 @@ public class AlunoView {
         }
         else {
             System.out.println("Digite algum valor para idade!");
+            SubMenuController.show("Aluno");
+        }
+    }
+
+    public static void validaCursoAluno(String curso, Aluno aluno){
+        if (!curso.isEmpty()) {
+            Curso existeCurso = CursoDAO.Get(curso);
+            if(!existeCurso.getCodigoCurso().isEmpty()){
+                aluno.setMatricula(curso);
+            }
+            else{
+                System.out.println("Não existe nenhum curso com esse codigo");
+                SubMenuController.show("Curso");
+            }
+
+        }
+        else {
+            System.out.println("Digite algum valor para matricula!");
+            SubMenuController.show("Aluno");
+        }
+    }
+
+    public static void validaSeExisteCurso(){
+        List existeCurso = CursoDAO.buscaCursos();
+
+        if(existeCurso.toArray().length == 0){
+            System.out.println("Não é possivel criar um aluno sem criar um curso");
+            SubMenuController.show("Curso");
+        }
+    }
+
+    public static void mostraCursoExistente(){
+        System.out.println("Cursos disponivel em nossa faculdade:");
+        System.out.println();
+
+        List cursosExistentes = CursoDAO.GetAll();
+        CursoView.ConsultarAll(cursosExistentes);
+    }
+
+    public static void validaCodigoDoCurso(String curso, Aluno aluno){
+        if (!curso.isEmpty()) {
+            aluno.setIdCurso(curso);
+        }
+        else {
+            System.out.println("Digite algum valor para código do curso!");
             SubMenuController.show("Aluno");
         }
     }

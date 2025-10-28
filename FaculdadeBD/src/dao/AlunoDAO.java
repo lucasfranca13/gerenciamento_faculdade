@@ -22,12 +22,13 @@ public class AlunoDAO {
 
 
     public static void Add(Aluno aluno) {
-        String sql = "INSERT INTO alunos (matricula, nome, idade) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO alunos (matricula, nome, idade, curso_id) VALUES (?, ?, ?, ?)";
             try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
 
                 stmt.setString(1, aluno.getMatricula());
                 stmt.setString(2, aluno.getNome());
                 stmt.setInt(3, aluno.getIdade());
+                stmt.setString(4,aluno.getIdCurso());
 
                 stmt.executeUpdate();
                 System.out.println("Aluno cadastrado com sucesso!");
@@ -53,7 +54,8 @@ public class AlunoDAO {
                     aluno = Optional.of(new Aluno(
                             rs.getString("nome"),
                             rs.getInt("idade"),
-                            rs.getString("matricula")
+                            rs.getString("matricula"),
+                            rs.getString("curso_id")
                     ));
                 }
                 if(aluno.isEmpty()){
@@ -83,7 +85,8 @@ public class AlunoDAO {
                     aluno = Optional.of(new Aluno(
                             rs.getString("nome"),
                             rs.getInt("idade"),
-                            rs.getString("matricula")
+                            rs.getString("matricula"),
+                            rs.getString("curso_id")
                     ));
                 }
                 if(aluno.isEmpty()){
@@ -112,7 +115,8 @@ public class AlunoDAO {
                     aluno = Optional.of(new Aluno(
                             rs.getString("nome"),
                             rs.getInt("idade"),
-                            rs.getString("matricula")
+                            rs.getString("matricula"),
+                            rs.getString("curso_id")
                     ));
                     listAlunos.add(aluno.get());
                 }
@@ -131,13 +135,14 @@ public class AlunoDAO {
     }
 
     public static void Atualiza(Aluno aluno) {
-        String sql = "UPDATE alunos SET nome = ?, idade = ? WHERE matricula = ?";
+        String sql = "UPDATE alunos SET nome = ?, idade = ?, curso_id = ? WHERE matricula = ?";
 
         try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
 
             stmt.setString(1, aluno.getNome());
             stmt.setInt(2, aluno.getIdade());
             stmt.setString(3, aluno.getMatricula());
+            stmt.setString(4, aluno.getIdCurso());
 
             int linhasAfetadas = stmt.executeUpdate();
 
@@ -168,12 +173,14 @@ public class AlunoDAO {
 
     public static void Criar() {
         String sqlCreateTable = """
-            CREATE TABLE IF NOT EXISTS alunos (
-                matricula VARCHAR(10) PRIMARY KEY,
-                nome VARCHAR(100) NOT NULL,
-                idade INT NOT NULL
-            );
-        """;
+        CREATE TABLE IF NOT EXISTS alunos (
+            matricula VARCHAR(10) PRIMARY KEY,
+            nome VARCHAR(100) NOT NULL,
+            idade INT NOT NULL,
+            curso_id VARCHAR(10) NOT NULL,
+            FOREIGN KEY (curso_id) REFERENCES cursos(codigo)
+        );
+    """;
 
         try (Statement stmt = DatabaseConnection.getConnection().createStatement()) {
 

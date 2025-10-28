@@ -11,9 +11,9 @@ public class Main {
     public static void main(String[] args) {
 
         DatabaseConnection.getConnection();
-        AlunoDAO.Criar();
-        CursoDAO.Criar();
         DisciplinaDAO.Criar();
+        CursoDAO.Criar();
+        AlunoDAO.Criar();
         MenuController.show();
         DatabaseConnection.closeConnection();
 

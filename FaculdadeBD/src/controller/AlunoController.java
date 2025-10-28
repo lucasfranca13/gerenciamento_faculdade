@@ -4,6 +4,7 @@ import dao.AlunoDAO;
 import model.Aluno;
 import view.AlunoView;
 import controller.MenuController;
+import dao.CursoDAO;
 
 public class AlunoController {
 
@@ -35,6 +36,8 @@ public class AlunoController {
     }
 
     public static void Atualizar() {
+        AlunoView.validaSeExisteCurso();
+
         String matricula = AlunoView.GetMatricula();
         Aluno aluno = AlunoDAO.Get(matricula);
         AlunoView.Atualizar(aluno);
