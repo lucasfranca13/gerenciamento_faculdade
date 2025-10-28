@@ -23,12 +23,13 @@ public class CursoDAO {
 
     // CREATE CURSO
     public static void Add(Curso curso) {
-        String sql = "INSERT INTO cursos (codigo, nome, turno) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO cursos (codigo, nome, turno, disciplina_id) VALUES (?, ?, ?, ?)";
             try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
 
                 stmt.setString(1, curso.getCodigoCurso());
                 stmt.setString(2, curso.getNomeCurso());
                 stmt.setString(3, curso.getTurno());
+                stmt.setString(4, curso.getIdDisciplina());
 
                 stmt.executeUpdate();
                 System.out.println("Curso cadastrado com sucesso!");
@@ -53,7 +54,8 @@ public class CursoDAO {
                     curso = Optional.of(new Curso(
                             rs.getString("Codigo"),
                             rs.getString("Nome"),
-                            rs.getString("Turno")
+                            rs.getString("Turno"),
+                            rs.getString("disciplina_id")
                     ));
                 }
                 if(curso.isEmpty()){
@@ -85,7 +87,8 @@ public class CursoDAO {
                     curso = Optional.of(new Curso(
                             rs.getString("Codigo"),
                             rs.getString("Nome"),
-                            rs.getString("Turno")
+                            rs.getString("Turno"),
+                            rs.getString("disciplina_id")
                     ));
                 }
                 if(curso.isEmpty()){
@@ -102,11 +105,12 @@ public class CursoDAO {
         return curso.get();
     }
 
+
     // lista todos os cursos
 
     public static List<Curso> GetAll(){
         List<Curso> listaCursos = new ArrayList<>();
-        String sql = "SELECT Codigo, Nome, Turno FROM cursos ORDER BY Nome";
+        String sql = "SELECT Codigo, Nome, Turno, disciplina_id FROM cursos ORDER BY Nome";
 
         try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -115,13 +119,39 @@ public class CursoDAO {
                 Curso curso = new Curso(
                         rs.getString("Codigo"),
                         rs.getString("Nome"),
-                        rs.getString("Turno")
+                        rs.getString("Turno"),
+                        rs.getString("disciplina_id")
                 );
                 listaCursos.add(curso);
             }
             if(listaCursos.isEmpty()){
-                System.out.println("Não foi encontrato nenhum aluno em nosso banco de dados");
+                System.out.println("Não foi encontrato nenhum curso em nosso banco de dados");
                 SubMenuController.show("Curso");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao consultar cursos: " + e.getMessage());
+            throw new RuntimeException("Erro ao consultar cursos no banco de dados", e);
+        }
+
+        return listaCursos;
+    }
+
+    public static List<Curso> buscaCursos(){
+        List<Curso> listaCursos = new ArrayList<>();
+        String sql = "SELECT Codigo, Nome, Turno, disciplina_id FROM cursos ORDER BY Nome";
+
+        try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Curso curso = new Curso(
+                        rs.getString("Codigo"),
+                        rs.getString("Nome"),
+                        rs.getString("Turno"),
+                        rs.getString("disciplina_id")
+                );
+                listaCursos.add(curso);
             }
 
         } catch (SQLException e) {
@@ -136,13 +166,14 @@ public class CursoDAO {
     public static void Atualizar(String codigo) {
         Curso curso = Get(codigo);
 
-        String sql = "UPDATE cursos SET nome = ?, turno = ? WHERE codigo = ?";
+        String sql = "UPDATE cursos SET nome = ?, turno = ?, disciplina_id = ? WHERE codigo = ?";
 
         try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
 
             stmt.setString(1, curso.getNomeCurso());
             stmt.setString(2, curso.getTurno());
             stmt.setString(3, curso.getCodigoCurso());
+            stmt.setString(3, curso.getIdDisciplina());
 
             int linhasAfetadas = stmt.executeUpdate();
 
@@ -179,7 +210,9 @@ public class CursoDAO {
             CREATE TABLE IF NOT EXISTS cursos (
                 codigo VARCHAR(10) PRIMARY KEY,
                 nome VARCHAR(100) NOT NULL,
-                turno VARCHAR(100) NOT NULL
+                turno VARCHAR(100) NOT,
+                disciplina_id VARCHAR(10) NOT NULL,
+            FOREIGN KEY (disciplina_id) REFERENCES disciplina(codigo)
             );
         """;
 

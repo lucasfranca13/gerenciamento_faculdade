@@ -38,7 +38,7 @@ public class SubMenuController {
                 }
             }
             if (value.equals("Disciplina")) {
-                switch (opcao) {
+                switch (opcaoValidada) {
                     case 1 -> DisciplinaController.Criar();
                     case 2 -> DisciplinaController.Consultar();
                     case 3 -> DisciplinaController.ListarDisciplinasAll();

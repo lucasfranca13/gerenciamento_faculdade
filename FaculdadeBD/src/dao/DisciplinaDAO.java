@@ -1,6 +1,8 @@
 package dao;
 
+import controller.SubMenuController;
 import database.DatabaseConnection;
+import model.Curso;
 import model.Disciplina;
 
 import java.sql.PreparedStatement;
@@ -33,6 +35,36 @@ public class DisciplinaDAO {
         }
     }
 
+    public static boolean existeEsseCodigoDiciplina(String codigo) {
+        String sql = "SELECT * FROM disciplina WHERE codigo = ?";
+        Optional<Disciplina>  disciplina = Optional.empty();
+
+        try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
+
+            stmt.setString(1, codigo);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    // Cria o objeto Aluno a partir dos dados retornados
+                    disciplina = Optional.of(new Disciplina(
+                            rs.getString("codigo"),
+                            rs.getString("Nome"),
+                            rs.getInt("carga")
+                    ));
+                }
+                if(disciplina.isEmpty()){
+                    return true;
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao consultar aluno: " + e.getMessage());
+            throw new RuntimeException("Erro ao consultar aluno no banco de dados", e);
+        }
+
+        return false;
+    };
+
     //READ disciplina
 
     public static Disciplina Get(String codigo) {
@@ -51,6 +83,10 @@ public class DisciplinaDAO {
                             rs.getString("Nome"),
                             rs.getInt("carga")
                     ));
+                }
+                if(disciplina.isEmpty()){
+                    System.out.println("Código: " + codigo + " não está vinculada a nenhum curso");
+                    SubMenuController.show("Curso");
                 }
             }
 
@@ -78,6 +114,10 @@ public class DisciplinaDAO {
                         rs.getInt("Carga")
                 );
                 listaDisciplinas.add(disciplina);
+            }
+            if(listaDisciplinas.isEmpty()){
+                System.out.println("Não foi encontrato nenhum aluno em nosso banco de dados");
+                SubMenuController.show("Curso");
             }
 
         } catch (SQLException e) {

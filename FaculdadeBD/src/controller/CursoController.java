@@ -23,8 +23,8 @@ public class CursoController {
     public static void validaSeExisteCodigo(String codigo) {
         boolean existeCodigo = CursoDAO.existeEsseCodigo(codigo);
         if (!existeCodigo) {
-            System.out.println("Essa código já está cadastrada em um aluno ja existente!");
-            SubMenuController.show("Aluno");
+            System.out.println("Essa código já está cadastrado em um curso ja existente!");
+            SubMenuController.show("Curso");
         }
     }
 
