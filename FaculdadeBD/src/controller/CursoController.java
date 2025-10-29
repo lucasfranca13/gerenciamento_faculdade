@@ -42,13 +42,20 @@ public class CursoController {
         String codigo = CursoView.GetCurso();
         Curso curso = CursoDAO.Get(codigo);
         CursoView.Atualizar(curso);
-        CursoDAO.Atualizar(codigo);
+        CursoDAO.Atualizar(curso);
     }
 
     public static void Deletar() {
         String codigo = CursoView.GetCurso();
-        CursoDAO.Deletar(codigo);
-        SubMenuController.show("Curso");
+        List temAlunoNoCurso = AlunoDAO.buscaAlunoPeloCurso(codigo);
+        if(temAlunoNoCurso.toArray().length == 0){
+            CursoDAO.Deletar(codigo);
+            SubMenuController.show("Curso");
+        }
+        else{
+            System.out.println("Não é possivel apagar curso que tenha um ou mais alunos vinculados!");
+            SubMenuController.show("Curso");
+        }
     }
 
 }

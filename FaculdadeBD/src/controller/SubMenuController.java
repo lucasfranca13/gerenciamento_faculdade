@@ -14,6 +14,7 @@ public class SubMenuController {
         do {
             SubMenuView.print(value);
             opcao = scan.nextLine();
+            MenuController.usuarioEcolheuUmaOpcaoQueNaoExiste(opcao);
             opcaoValidada = MenuController.valaidaSeUsuarioEscolheuAlgumaOpcao(opcao);
             if (value.equals("Aluno")) {
                 switch (opcaoValidada) {
@@ -23,7 +24,7 @@ public class SubMenuController {
                     case 4 -> AlunoController.Atualizar();
                     case 5 -> AlunoController.Deletar();
                     case 6 -> MenuController.show();
-                    default -> System.out.println("\nInsira um valor válido!\n");
+                    default -> MenuController.validaOpcao();
                 }
             }
             if (value.equals("Curso")) {
@@ -34,7 +35,7 @@ public class SubMenuController {
                         case 4 -> CursoController.Atualizar();
                         case 5 -> CursoController.Deletar();
                         case 6 -> MenuController.show();
-                        default -> System.out.println("\nInsira um valor válido!\n");
+                        default -> MenuController.validaOpcao();
                 }
             }
             if (value.equals("Disciplina")) {
@@ -45,7 +46,7 @@ public class SubMenuController {
                     case 4 -> DisciplinaController.Atualizar();
                     case 5 -> DisciplinaController.Deletar();
                     case 6 -> MenuController.show();
-                    default -> System.out.println("\nInsira um valor válido!\n");
+                    default -> MenuController.validaOpcao();
                 }
             }
 

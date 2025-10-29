@@ -71,6 +71,34 @@ public class CursoDAO {
         return false;
     };
 
+    public static List<Curso> buscaCursoPelaDisciplina(String codigo) {
+        String sql = "SELECT * FROM cursos WHERE disciplina_id = ?";
+        Optional<Curso> curso = Optional.empty();
+
+        try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
+
+            stmt.setString(1, codigo);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    // Cria o objeto Curso a partir dos dados retornados
+                    curso = Optional.of(new Curso(
+                            rs.getString("Codigo"),
+                            rs.getString("Nome"),
+                            rs.getString("Turno"),
+                            rs.getString("disciplina_id")
+                    ));
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao consultar curso: " + e.getMessage());
+            throw new RuntimeException("Erro ao consultar curso no banco de dados", e);
+        }
+
+        return curso.stream().toList();
+    }
+
     //READ CURSO
 
     public static Curso Get(String codigo) {
@@ -163,8 +191,7 @@ public class CursoDAO {
     }
 
     //UPDATE CURSO (SET)
-    public static void Atualizar(String codigo) {
-        Curso curso = Get(codigo);
+    public static void Atualizar(Curso curso) {
 
         String sql = "UPDATE cursos SET nome = ?, turno = ?, disciplina_id = ? WHERE codigo = ?";
 
@@ -172,8 +199,8 @@ public class CursoDAO {
 
             stmt.setString(1, curso.getNomeCurso());
             stmt.setString(2, curso.getTurno());
-            stmt.setString(3, curso.getCodigoCurso());
             stmt.setString(3, curso.getIdDisciplina());
+            stmt.setString(4, curso.getCodigoCurso());
 
             int linhasAfetadas = stmt.executeUpdate();
 
@@ -210,9 +237,9 @@ public class CursoDAO {
             CREATE TABLE IF NOT EXISTS cursos (
                 codigo VARCHAR(10) PRIMARY KEY,
                 nome VARCHAR(100) NOT NULL,
-                turno VARCHAR(100) NOT,
-                disciplina_id VARCHAR(10) NOT NULL,
-            FOREIGN KEY (disciplina_id) REFERENCES disciplina(codigo)
+                turno VARCHAR(100) NOT NULL,
+                disciplina_id VARCHAR(100) NOT NULL,
+            FOREIGN KEY (disciplina_id) REFERENCES disciplina(codigo_diciplina)
             );
         """;
 

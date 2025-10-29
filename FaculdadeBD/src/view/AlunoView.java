@@ -132,7 +132,7 @@ public class AlunoView {
         if (!curso.isEmpty()) {
             Curso existeCurso = CursoDAO.Get(curso);
             if(!existeCurso.getCodigoCurso().isEmpty()){
-                aluno.setMatricula(curso);
+                aluno.setIdCurso(curso);
             }
             else{
                 System.out.println("Não existe nenhum curso com esse codigo");
@@ -141,7 +141,7 @@ public class AlunoView {
 
         }
         else {
-            System.out.println("Digite algum valor para matricula!");
+            System.out.println("Digite algum valor para código do curso!");
             SubMenuController.show("Aluno");
         }
     }
@@ -165,7 +165,14 @@ public class AlunoView {
 
     public static void validaCodigoDoCurso(String curso, Aluno aluno){
         if (!curso.isEmpty()) {
-            aluno.setIdCurso(curso);
+            boolean existeCurso = CursoDAO.existeEsseCodigo(curso);
+            if (!existeCurso){
+                aluno.setIdCurso(curso);
+            }
+            else {
+                System.out.println("O codigo do curso não existe");
+                SubMenuController.show("Aluno");
+            }
         }
         else {
             System.out.println("Digite algum valor para código do curso!");

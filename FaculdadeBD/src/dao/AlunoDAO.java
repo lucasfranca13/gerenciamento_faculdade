@@ -103,6 +103,34 @@ public class AlunoDAO {
         return aluno.get();
     }
 
+    public static List<Aluno> buscaAlunoPeloCurso(String idCurso) {
+        String sql = "SELECT * FROM alunos WHERE curso_id = ?";
+        Optional<Aluno> aluno = Optional.empty();
+
+        try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
+
+            stmt.setString(1, idCurso);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    // Cria o objeto Aluno a partir dos dados retornados
+                    aluno = Optional.of(new Aluno(
+                            rs.getString("nome"),
+                            rs.getInt("idade"),
+                            rs.getString("matricula"),
+                            rs.getString("curso_id")
+                    ));
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao consultar aluno: " + e.getMessage());
+            throw new RuntimeException("Erro ao consultar aluno no banco de dados", e);
+        }
+
+        return aluno.stream().toList();
+    }
+
     public static List<Aluno> GetAll() {
         String sql = "SELECT * FROM alunos ORDER BY nome";
         Optional<Aluno> aluno = Optional.empty();
@@ -136,13 +164,14 @@ public class AlunoDAO {
 
     public static void Atualiza(Aluno aluno) {
         String sql = "UPDATE alunos SET nome = ?, idade = ?, curso_id = ? WHERE matricula = ?";
+        System.out.println("Atualizando aluno: " + aluno.getMatricula() + " - " + aluno.getNome() + " - " + aluno.getIdade() + " - " + aluno.getIdCurso());
 
         try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
 
             stmt.setString(1, aluno.getNome());
             stmt.setInt(2, aluno.getIdade());
-            stmt.setString(3, aluno.getMatricula());
-            stmt.setString(4, aluno.getIdCurso());
+            stmt.setString(3, aluno.getIdCurso());
+            stmt.setString(4, aluno.getMatricula());
 
             int linhasAfetadas = stmt.executeUpdate();
 

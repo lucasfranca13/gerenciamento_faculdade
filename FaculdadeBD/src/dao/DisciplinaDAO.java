@@ -17,7 +17,7 @@ public class DisciplinaDAO {
 
     // CREATE Disciplina
     public static void Add(Disciplina disciplina) {
-        String sql = "INSERT INTO disciplina (codigo, nome, carga) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO disciplina (codigo_diciplina, nome, carga) VALUES (?, ?, ?)";
 
 
         try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
@@ -36,7 +36,7 @@ public class DisciplinaDAO {
     }
 
     public static boolean existeEsseCodigoDiciplina(String codigo) {
-        String sql = "SELECT * FROM disciplina WHERE codigo = ?";
+        String sql = "SELECT * FROM disciplina WHERE codigo_diciplina = ?";
         Optional<Disciplina>  disciplina = Optional.empty();
 
         try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
@@ -47,7 +47,7 @@ public class DisciplinaDAO {
                 if (rs.next()) {
                     // Cria o objeto Aluno a partir dos dados retornados
                     disciplina = Optional.of(new Disciplina(
-                            rs.getString("codigo"),
+                            rs.getString("codigo_diciplina"),
                             rs.getString("Nome"),
                             rs.getInt("carga")
                     ));
@@ -65,10 +65,34 @@ public class DisciplinaDAO {
         return false;
     };
 
+    public static List<Disciplina> buscaDisciplina(){
+        List<Disciplina> listaDisciplina = new ArrayList<>();
+        String sql = "SELECT codigo_diciplina, Nome, carga FROM disciplina ORDER BY Nome";
+
+        try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Disciplina disciplina = new Disciplina(
+                        rs.getString("codigo_diciplina"),
+                        rs.getString("Nome"),
+                        rs.getInt("carga")
+                );
+                listaDisciplina.add(disciplina);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao consultar disciplina: " + e.getMessage());
+            throw new RuntimeException("Erro ao consultar disciplina no banco de dados", e);
+        }
+
+        return listaDisciplina;
+    }
+
     //READ disciplina
 
     public static Disciplina Get(String codigo) {
-        String sql = "SELECT * FROM disciplina WHERE codigo = ?";
+        String sql = "SELECT * FROM disciplina WHERE codigo_diciplina = ?";
         Optional<Disciplina> disciplina = Optional.empty();
 
         try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
@@ -79,7 +103,7 @@ public class DisciplinaDAO {
                 if (rs.next()) {
                     // Cria o objeto disciplina a partir dos dados retornados
                     disciplina = Optional.of(new Disciplina(
-                            rs.getString("Codigo"),
+                            rs.getString("codigo_diciplina"),
                             rs.getString("Nome"),
                             rs.getInt("carga")
                     ));
@@ -102,21 +126,21 @@ public class DisciplinaDAO {
 
     public static List<Disciplina> GetAll(){
         List<Disciplina> listaDisciplinas = new ArrayList<>();
-        String sql = "SELECT codigo, nome, carga FROM disciplina ORDER BY nome";
+        String sql = "SELECT codigo_diciplina, nome, carga FROM disciplina ORDER BY nome";
 
         try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 Disciplina disciplina = new Disciplina(
-                        rs.getString("Codigo"),
+                        rs.getString("codigo_diciplina"),
                         rs.getString("Nome"),
                         rs.getInt("Carga")
                 );
                 listaDisciplinas.add(disciplina);
             }
             if(listaDisciplinas.isEmpty()){
-                System.out.println("Não foi encontrato nenhum aluno em nosso banco de dados");
+                System.out.println("Não foi encontrato nenhuma disciplina em nosso banco de dados");
                 SubMenuController.show("Curso");
             }
 
@@ -131,7 +155,7 @@ public class DisciplinaDAO {
     //UPDATE Disciplina (SET)
     public static void Atualizar(Disciplina disciplina) {
 
-        String sql = "UPDATE disciplina SET nome = ?, carga = ? WHERE codigo = ?";
+        String sql = "UPDATE disciplina SET nome = ?, carga = ? WHERE codigo_diciplina = ?";
 
         try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
 
@@ -152,7 +176,7 @@ public class DisciplinaDAO {
 
     public static void Deletar(String codigo) {
 
-        String deleteSql = "DELETE FROM disciplina WHERE codigo = ?";
+        String deleteSql = "DELETE FROM disciplina WHERE codigo_diciplina = ?";
 
         try (PreparedStatement deleteStmt = DatabaseConnection.getConnection().prepareStatement(deleteSql)) {
             deleteStmt.setString(1, codigo);
@@ -167,7 +191,7 @@ public class DisciplinaDAO {
     public static void Criar() {
         String sqlCreateTable = """
             CREATE TABLE IF NOT EXISTS disciplina (
-                codigo VARCHAR(100) PRIMARY KEY,
+                codigo_diciplina VARCHAR(100) PRIMARY KEY,
                 nome VARCHAR(100) NOT NULL,
                 carga INT NOT NULL
             );
