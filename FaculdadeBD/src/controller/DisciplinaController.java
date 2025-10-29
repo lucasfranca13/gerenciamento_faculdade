@@ -1,5 +1,6 @@
 package controller;
 
+import dao.AlunoDAO;
 import dao.CursoDAO;
 import dao.DisciplinaDAO;
 import model.Curso;
@@ -46,8 +47,16 @@ public class DisciplinaController {
 
     public static void Deletar() {
         String codigo = DisciplinaView.GetCodDisciplina();
-        DisciplinaDAO.Deletar(codigo);
-        SubMenuController.show("Disciplina");
+        List temAlunoNoCurso = CursoDAO.buscaCursoPelaDisciplina(codigo);
+        if(temAlunoNoCurso.toArray().length == 0){
+            DisciplinaDAO.Deletar(codigo);
+            SubMenuController.show("Disciplina");
+        }
+        else{
+            System.out.println("Não é possivel apagar disciplina que tenha um ou mais cursos vinculados!");
+            SubMenuController.show("Disciplina");
+        }
+
     }
 
 

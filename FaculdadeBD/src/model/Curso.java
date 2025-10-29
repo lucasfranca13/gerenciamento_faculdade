@@ -16,13 +16,15 @@ public class Curso {
         this.codigoCurso = codigoCurso;
         this.nomeCurso = nomeCurso;
         this.turno = turno;
+        this.idDisciplina = idDisciplina;
     }
 
-    public Curso(String codigoCurso, String nomeCurso, String turno, List<Aluno> listaAlunos) {
+    public Curso(String codigoCurso, String nomeCurso, String turno, List<Aluno> listaAlunos, String idDisciplina) {
         this.codigoCurso = codigoCurso;
         this.nomeCurso = nomeCurso;
         this.turno = turno;
         this.listaAlunos = listaAlunos;
+        this.idDisciplina = idDisciplina;
     }
 
     public String getCodigoCurso() {
