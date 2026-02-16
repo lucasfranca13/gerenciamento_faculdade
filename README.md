@@ -9,7 +9,8 @@ O sistema permite o cadastro e consulta de informações relacionadas ao ambient
 * JDBC
 * MySQL
 * Banco de dados relacional
-* IntelliJ IDEA
+* Arquitetura MVC
+* Apache
 
 ## Funcionalidades
 
